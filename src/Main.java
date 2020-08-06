@@ -41,14 +41,14 @@ class ImagePanel extends JPanel{
 }
 
 public class Main {
-	
-	private static final String ENTERID = "kenny2009";
-	private static final String ENTERPW = "1234";
 	static int isFirst=0;
 	
+	static JFrame frame = new JFrame("Find Mine");
+	
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Find Mine");
 		GameData game = new GameData();
+		String[][] member = Member.getMember();
+		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setJMenuBar(menuBar());
@@ -56,10 +56,10 @@ public class Main {
 		/* frame components */
 		ImagePanel loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
 		frame.add(loginPanel);
-		frame.setSize(640,480);
+		frame.setSize(640,525);
 		frame.setResizable(false);
 		
-		JPanel mainPanel = new JPanel(null);
+		ImagePanel mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
 		frame.add(mainPanel);
 		mainPanel.setVisible(false);
 		
@@ -68,7 +68,7 @@ public class Main {
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(200, 236, 61, 16);
-		loginPanel.add(lblNewLabel);
+		loginPanel.add(lblNewLabel); 
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,7 +118,7 @@ public class Main {
 							gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 							gameBoard[row][col].setEnabled(false);
 							JOptionPane.showMessageDialog(null, "Boom!");
-							//System.exit(0);
+							System.exit(0);
 						} else {
 							switch(result_) {
 							case 0:
@@ -268,19 +268,21 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String enterId = textFieldID.getText();
-				char[] enterPw = passwordField.getPassword();
+				char[] pw = passwordField.getPassword();
+				String enterPw = new String(pw,0,pw.length);
+				int index;
 				
-				if(ENTERID.equals(enterId)) {
-					if(Arrays.equals(enterPw, ENTERPW.toCharArray())) {
+				if((index =Member.isThereMember(enterId)) != -1) {
+					if(Member.isPwCorrect(enterPw,index)) {
 						loginPanel.setVisible(false);
-						frame.setSize(900, 700);
+						frame.setSize(900,700);
 						frame.setLocationRelativeTo(null);
 						mainPanel.setVisible(true);
 					} else {
-						JOptionPane.showMessageDialog(null,"Wrong PassWord!");
+						JOptionPane.showMessageDialog(null, "Incorrect PW");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Unregistered ID!");
+					JOptionPane.showMessageDialog(null, "Unregistered ID");
 				}
 			}
 			
@@ -297,9 +299,11 @@ public class Main {
 		JMenuBar bar = new JMenuBar();
 		bar.setForeground(Color.WHITE);
 		JMenu game = new JMenu("Game");
+		JMenu member = new JMenu("Member");
 		JMenu about = new JMenu("About");
 		
 		bar.add(game);
+		bar.add(member);
 		bar.add(about);
 		
 		JMenuItem newGame = new JMenuItem("New Game");
@@ -319,6 +323,20 @@ public class Main {
 		game.add(option);
 		game.addSeparator();
 		game.add(exit);
+		
+		JMenuItem joinUs = new JMenuItem("Join Us");
+		
+		joinUs.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SignUs signUs = new SignUs(frame);
+				signUs.setVisible(true);
+			}
+			
+		});
+		
+		member.add(joinUs);
 		
 		JMenuItem thisGame = new JMenuItem("This Game");
 		
