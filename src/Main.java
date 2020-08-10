@@ -49,6 +49,12 @@ public class Main extends Thread{
 			GameData game = new GameData();
 			JTextField timeZone = new JTextField(20);
 			GameTime time = new GameTime(timeZone);
+			Score gameScore = new Score();
+			JTextField scoreZone = new JTextField(20);
+			scoreZone.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			scoreZone.setBounds(700, 500, 100, 30);
+			scoreZone.setText(gameScore.getStringScore());
+			scoreZone.setEnabled(false);
 			//String[][] member = Member.getMember();
 			
 			frame.setLocationRelativeTo(null);
@@ -120,6 +126,7 @@ public class Main extends Thread{
 								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 								gameBoard[row][col].setEnabled(false);
 								JOptionPane.showMessageDialog(null, "Boom!");
+								time.interrupt();
 								System.exit(0);
 							} else {
 								switch(result_) {
@@ -160,6 +167,8 @@ public class Main extends Thread{
 									gameBoard[row][col].setEnabled(false);
 									break;
 								}
+								gameScore.increaseScore(time.getTime());
+								scoreZone.setText(gameScore.getStringScore());
 							}
 							
 							
@@ -179,6 +188,7 @@ public class Main extends Thread{
 											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 											gameBoard[nrow][ncol].setEnabled(false);
 											JOptionPane.showMessageDialog(null, "Boom!");
+											time.interrupt();
 											//System.exit(0);
 										} else {
 											switch(result) {
@@ -219,6 +229,8 @@ public class Main extends Thread{
 												gameBoard[nrow][ncol].setEnabled(false);
 												break;
 											}
+											gameScore.increaseScore(time.getTime());
+											scoreZone.setText(gameScore.getStringScore());
 										}
 									}
 								}
@@ -243,11 +255,7 @@ public class Main extends Thread{
 									gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
 								else 
 									gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
-								
-								System.out.println(time.getTime());
 							}
-							
-							System.out.println(time.getTime());
 						}
 
 						@Override
@@ -265,11 +273,17 @@ public class Main extends Thread{
 			}
 			
 			mainPanel.add(timeZone);
+			mainPanel.add(scoreZone);
 			
-			JButton clock = new JButton();
-			clock.setIcon(new ImageIcon("./image/clock.jpg"));
-			clock.setBounds(90, 500, 30, 30);
-			mainPanel.add(clock);
+			JButton btnClock = new JButton();
+			btnClock.setIcon(new ImageIcon("./image/clock.jpg"));
+			btnClock.setBounds(90, 500, 30, 30);
+			mainPanel.add(btnClock);
+			
+			JButton btnScore = new JButton();
+			btnScore.setIcon(new ImageIcon("./image/score.jpg"));
+			btnScore.setBounds(660, 500, 30, 30);
+			mainPanel.add(btnScore);
 			
 			/* login button */
 			JButton btnLogin = new JButton("Login");
