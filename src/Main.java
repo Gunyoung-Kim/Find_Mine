@@ -40,259 +40,284 @@ class ImagePanel extends JPanel{
 	}
 }
 
-public class Main {
+public class Main extends Thread{
 	static int isFirst=0;
-	
 	static JFrame frame = new JFrame("Find Mine");
 	
 	public static void main(String[] args) {
-		GameData game = new GameData();
-		String[][] member = Member.getMember();
-		
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		frame.setJMenuBar(menuBar());
-		
-		/* frame components */
-		ImagePanel loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
-		frame.add(loginPanel);
-		frame.setSize(640,525);
-		frame.setResizable(false);
-		
-		ImagePanel mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
-		frame.add(mainPanel);
-		mainPanel.setVisible(false);
-		
-		/* loginPanel components */
-		JLabel lblNewLabel = new JLabel("ID");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(200, 236, 61, 16);
-		loginPanel.add(lblNewLabel); 
-		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblPassword.setBounds(154, 283, 90, 16);
-		loginPanel.add(lblPassword);
-		
-		JTextField textFieldID = new JTextField();
-		textFieldID.setBounds(264, 226, 181, 26);
-		loginPanel.add(textFieldID);
-		textFieldID.setColumns(10);
-		
-		JPasswordField passwordField = new JPasswordField();
-		passwordField.setBounds(264, 281, 181, 26);
-		loginPanel.add(passwordField);
-		
-		JButton[][] gameBoard = new JButton[16][30];
-		
-		/* mainPanel components */
-		for(int i=0;i<16;i++) {
-			for(int j=0;j<30;j++) {
-				gameBoard[i][j] = new JButton();
-				gameBoard[i][j].setBounds(100+25*(j-1), 100+25*(i-1) , 25, 25);
-				gameBoard[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				gameBoard[i][j].setBackground(Color.black);
-				int row =i;
-				int col = j;
-				gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
-				
-				gameBoard[i][j].addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if(isFirst ==0) {
-							game.setGameData(row, col);
-							isFirst =1;
-						}
-						
-						Queue<Point> que = new LinkedList<>();
-						int[] drow = new int[] {-1,0,0,1};
-						int[] dcol = new int[] {0,1,-1,0};
-						
-						que.offer(new Point(row,col));
-						
-						int result_ = game.Click(row,col);
-						
-						if(result_ ==-1) {
-							gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
-							gameBoard[row][col].setEnabled(false);
-							JOptionPane.showMessageDialog(null, "Boom!");
-							System.exit(0);
-						} else {
-							switch(result_) {
-							case 0:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 1:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/one.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 2:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/two.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 3:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/three.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 4:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/four.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 5:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/five.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 6:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/six.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 7:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
-							case 8:
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
-								gameBoard[row][col].setEnabled(false);
-								break;
+		Runnable task = () -> {
+			GameData game = new GameData();
+			JTextField timeZone = new JTextField(20);
+			GameTime time = new GameTime(timeZone);
+			//String[][] member = Member.getMember();
+			
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+			frame.setJMenuBar(menuBar());
+			
+			/* frame components */
+			ImagePanel loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
+			frame.add(loginPanel);
+			frame.setSize(640,525);
+			frame.setResizable(false);
+			
+			ImagePanel mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
+			frame.add(mainPanel);
+			mainPanel.setVisible(false);
+			
+			/* loginPanel components */
+			JLabel lblNewLabel = new JLabel("ID");
+			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setBounds(200, 236, 61, 16);
+			loginPanel.add(lblNewLabel); 
+			
+			JLabel lblPassword = new JLabel("Password");
+			lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
+			lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			lblPassword.setBounds(154, 283, 90, 16);
+			loginPanel.add(lblPassword);
+			
+			JTextField textFieldID = new JTextField();
+			textFieldID.setBounds(264, 226, 181, 26);
+			loginPanel.add(textFieldID);
+			textFieldID.setColumns(10);
+			
+			JPasswordField passwordField = new JPasswordField();
+			passwordField.setBounds(264, 281, 181, 26);
+			loginPanel.add(passwordField);
+			
+			JButton[][] gameBoard = new JButton[16][30];
+			
+			/* mainPanel components */
+			for(int i=0;i<16;i++) {
+				for(int j=0;j<30;j++) {
+					gameBoard[i][j] = new JButton();
+					gameBoard[i][j].setBounds(100+25*(j-1), 100+25*(i-1) , 25, 25);
+					gameBoard[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					gameBoard[i][j].setBackground(Color.black);
+					int row =i;
+					int col = j;
+					gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
+					
+					gameBoard[i][j].addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if(isFirst ==0) {
+								game.setGameData(row, col);
+								isFirst =1;
 							}
-						}
-						
-						
-						while(!que.isEmpty()) {
-							Point p = que.poll();
 							
-							for(int z=0;z<4;z++) {
-								int nrow = p.getRow() + drow[z];
-								int ncol = p.getCol() + dcol[z];
+							Queue<Point> que = new LinkedList<>();
+							int[] drow = new int[] {-1,0,0,1};
+							int[] dcol = new int[] {0,1,-1,0};
+							
+							que.offer(new Point(row,col));
+							
+							int result_ = game.Click(row,col);
+							
+							if(result_ ==-1) {
+								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
+								gameBoard[row][col].setEnabled(false);
+								JOptionPane.showMessageDialog(null, "Boom!");
+								System.exit(0);
+							} else {
+								switch(result_) {
+								case 0:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 1:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/one.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 2:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/two.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 3:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/three.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 4:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/four.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 5:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/five.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 6:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/six.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 7:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								case 8:
+									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
+									gameBoard[row][col].setEnabled(false);
+									break;
+								}
+							}
+							
+							
+							while(!que.isEmpty()) {
+								Point p = que.poll();
 								
-								if(nrow>=0 && nrow<gameBoard.length && ncol>=0 &&ncol <gameBoard[0].length && !game.isClicked(nrow, ncol) && !game.isMine(nrow, ncol)) {
-									int result = game.Click(nrow,ncol);
-									if(result ==0)
-										que.offer(new Point(nrow,ncol));
+								for(int z=0;z<4;z++) {
+									int nrow = p.getRow() + drow[z];
+									int ncol = p.getCol() + dcol[z];
 									
-									if(result ==-1) {
-										gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
-										gameBoard[nrow][ncol].setEnabled(false);
-										JOptionPane.showMessageDialog(null, "Boom!");
-										//System.exit(0);
-									} else {
-										switch(result) {
-										case 0:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
+									if(nrow>=0 && nrow<gameBoard.length && ncol>=0 &&ncol <gameBoard[0].length && !game.isClicked(nrow, ncol) && !game.isMine(nrow, ncol)) {
+										int result = game.Click(nrow,ncol);
+										if(result ==0)
+											que.offer(new Point(nrow,ncol));
+										
+										if(result ==-1) {
+											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 1:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/one.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 2:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/two.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 3:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/three.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 4:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/four.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 5:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/five.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 6:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/six.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 7:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
-										case 8:
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											break;
+											JOptionPane.showMessageDialog(null, "Boom!");
+											//System.exit(0);
+										} else {
+											switch(result) {
+											case 0:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 1:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/one.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 2:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/two.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 3:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/three.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 4:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/four.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 5:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/five.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 6:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/six.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 7:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											case 8:
+												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
+												gameBoard[nrow][ncol].setEnabled(false);
+												break;
+											}
 										}
 									}
 								}
 							}
 						}
-					}
-				});
-				
-				gameBoard[i][j].addMouseListener(new MouseListener() {
+					});
+					
+					gameBoard[i][j].addMouseListener(new MouseListener() {
 
-					@Override
-					public void mouseClicked(MouseEvent e) {}
+						@Override
+						public void mouseClicked(MouseEvent e) {}
 
-					@Override
-					public void mousePressed(MouseEvent e) {
-						if(e.getButton() == MouseEvent.BUTTON3) {
-							ImageIcon icon = (ImageIcon)gameBoard[row][col].getIcon();
-							if(icon.getDescription().equals("default_button"))
-								gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
-							else if(icon.getDescription().equals("red_flag"))
-								gameBoard[row][col].setIcon(new ImageIcon("./image/yellow_flag.jpg","yellow_flag"));
-							else if(icon.getDescription().equals("yellow_flag"))
-								gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
-							else 
-								gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
+						@Override
+						public void mousePressed(MouseEvent e) {
+							if(e.getButton() == MouseEvent.BUTTON3) {
+								ImageIcon icon = (ImageIcon)gameBoard[row][col].getIcon();
+								if(icon.getDescription().equals("default_button"))
+									gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
+								else if(icon.getDescription().equals("red_flag"))
+									gameBoard[row][col].setIcon(new ImageIcon("./image/yellow_flag.jpg","yellow_flag"));
+								else if(icon.getDescription().equals("yellow_flag"))
+									gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
+								else 
+									gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
+								
+								System.out.println(time.getTime());
+							}
+							
+							System.out.println(time.getTime());
 						}
-					}
 
-					@Override
-					public void mouseReleased(MouseEvent e) {}
+						@Override
+						public void mouseReleased(MouseEvent e) {}
 
-					@Override
-					public void mouseEntered(MouseEvent e) {}
+						@Override
+						public void mouseEntered(MouseEvent e) {}
 
-					@Override
-					public void mouseExited(MouseEvent e) {}
-				});
-				
-				mainPanel.add(gameBoard[i][j]);
-			}
-		}
-		
-		/* login button */
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBackground(Color.WHITE);
-		btnLogin.setIcon(new ImageIcon("./image/login.jpg"));
-		btnLogin.setPressedIcon(new ImageIcon("./image/login_blue.JPG"));
-		btnLogin.setBounds(264, 338, 181, 29);
-		btnLogin.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String enterId = textFieldID.getText();
-				char[] pw = passwordField.getPassword();
-				String enterPw = new String(pw,0,pw.length);
-				int index;
-				
-				if((index =Member.isThereMember(enterId)) != -1) {
-					if(Member.isPwCorrect(enterPw,index)) {
-						loginPanel.setVisible(false);
-						frame.setSize(900,700);
-						frame.setLocationRelativeTo(null);
-						mainPanel.setVisible(true);
-					} else {
-						JOptionPane.showMessageDialog(null, "Incorrect PW");
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Unregistered ID");
+						@Override
+						public void mouseExited(MouseEvent e) {}
+					});
+					
+					mainPanel.add(gameBoard[i][j]);
 				}
 			}
 			
-		});
+			mainPanel.add(timeZone);
+			
+			JButton clock = new JButton();
+			clock.setIcon(new ImageIcon("./image/clock.jpg"));
+			clock.setBounds(90, 500, 30, 30);
+			mainPanel.add(clock);
+			
+			/* login button */
+			JButton btnLogin = new JButton("Login");
+			btnLogin.setBackground(Color.WHITE);
+			btnLogin.setIcon(new ImageIcon("./image/login.jpg"));
+			btnLogin.setPressedIcon(new ImageIcon("./image/login_blue.JPG"));
+			btnLogin.setBounds(264, 338, 181, 29);
+			btnLogin.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String enterId = textFieldID.getText();
+					char[] pw = passwordField.getPassword();
+					String enterPw = new String(pw,0,pw.length);
+					int index;
+					
+					/*
+					if((index =Member.isThereMember(enterId)) != -1) {
+						if(Member.isPwCorrect(enterPw,index)) {
+							loginPanel.setVisible(false);
+							frame.setSize(900,700);
+							frame.setLocationRelativeTo(null);
+							mainPanel.setVisible(true);
+						} else {
+							JOptionPane.showMessageDialog(null, "Incorrect PW");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Unregistered ID");
+					}
+					*/
+					loginPanel.setVisible(false);
+					frame.setSize(900,700);
+					frame.setLocationRelativeTo(null);
+					mainPanel.setVisible(true);
+					time.start();
+				}
+				
+			});
+			
+			loginPanel.add(btnLogin);
+			
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			
+
+		};
 		
-		loginPanel.add(btnLogin);
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
+		Thread t1 = new Thread(task);
+		t1.start();
 	}
 	
 	public static JMenuBar menuBar() {
