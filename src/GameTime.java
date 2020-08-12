@@ -28,6 +28,7 @@ public class GameTime extends Thread {
 	}
 	
 	public String getTimeString() {
+		
 		long min = time/60;
 		long sec = time%60;
 		

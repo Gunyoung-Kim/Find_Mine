@@ -43,14 +43,29 @@ class ImagePanel extends JPanel{
 public class Main extends Thread{
 	static int isFirst=0;
 	static JFrame frame = new JFrame("Find Mine");
+	static GameData game;
+	static JTextField timeZone;
+	static GameTime time;
+	static Score gameScore;
+	static JTextField scoreZone;
+	static ImagePanel loginPanel;
+	static ImagePanel mainPanel;
+	static JLabel lblNewLabel;
+	static JLabel lblPassword;
+	static JTextField textFieldID;
+	static JPasswordField passwordField;
+	static JButton[][] gameBoard;
+	static JButton btnLogin;
+	static JButton btnClock;
+	static JButton btnScore;
 	
 	public static void main(String[] args) {
 		Runnable task = () -> {
-			GameData game = new GameData();
-			JTextField timeZone = new JTextField(20);
-			GameTime time = new GameTime(timeZone);
-			Score gameScore = new Score();
-			JTextField scoreZone = new JTextField(20);
+			game = new GameData();
+			timeZone = new JTextField(20);
+			time = new GameTime(timeZone);
+			gameScore = new Score();
+			scoreZone = new JTextField(20);
 			scoreZone.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			scoreZone.setBounds(700, 500, 100, 30);
 			scoreZone.setText(gameScore.getStringScore());
@@ -62,38 +77,38 @@ public class Main extends Thread{
 			frame.setJMenuBar(menuBar());
 			
 			/* frame components */
-			ImagePanel loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
+			loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
 			frame.add(loginPanel);
 			frame.setSize(640,525);
 			frame.setResizable(false);
 			
-			ImagePanel mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
+			mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
 			frame.add(mainPanel);
 			mainPanel.setVisible(false);
 			
 			/* loginPanel components */
-			JLabel lblNewLabel = new JLabel("ID");
+			lblNewLabel = new JLabel("ID");
 			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel.setBounds(200, 236, 61, 16);
 			loginPanel.add(lblNewLabel); 
 			
-			JLabel lblPassword = new JLabel("Password");
+			lblPassword = new JLabel("Password");
 			lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
 			lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			lblPassword.setBounds(154, 283, 90, 16);
 			loginPanel.add(lblPassword);
 			
-			JTextField textFieldID = new JTextField();
+			textFieldID = new JTextField();
 			textFieldID.setBounds(264, 226, 181, 26);
 			loginPanel.add(textFieldID);
 			textFieldID.setColumns(10);
 			
-			JPasswordField passwordField = new JPasswordField();
+			passwordField = new JPasswordField();
 			passwordField.setBounds(264, 281, 181, 26);
 			loginPanel.add(passwordField);
 			
-			JButton[][] gameBoard = new JButton[16][30];
+			gameBoard = new JButton[16][30];
 			
 			/* mainPanel components */
 			for(int i=0;i<16;i++) {
@@ -122,54 +137,7 @@ public class Main extends Thread{
 							
 							int result_ = game.Click(row,col);
 							
-							if(result_ ==-1) {
-								gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
-								gameBoard[row][col].setEnabled(false);
-								JOptionPane.showMessageDialog(null, "Boom!");
-								time.interrupt();
-								System.exit(0);
-							} else {
-								switch(result_) {
-								case 0:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 1:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/one.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 2:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/two.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 3:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/three.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 4:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/four.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 5:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/five.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 6:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/six.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 7:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								case 8:
-									gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
-									gameBoard[row][col].setEnabled(false);
-									break;
-								}
-								gameScore.increaseScore(time.getTime());
-								scoreZone.setText(gameScore.getStringScore());
-							}
+							EnableBlock(result_,row,col);
 							
 							
 							while(!que.isEmpty()) {
@@ -184,54 +152,7 @@ public class Main extends Thread{
 										if(result ==0)
 											que.offer(new Point(nrow,ncol));
 										
-										if(result ==-1) {
-											gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
-											gameBoard[nrow][ncol].setEnabled(false);
-											JOptionPane.showMessageDialog(null, "Boom!");
-											time.interrupt();
-											//System.exit(0);
-										} else {
-											switch(result) {
-											case 0:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 1:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/one.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 2:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/two.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 3:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/three.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 4:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/four.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 5:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/five.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 6:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/six.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 7:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											case 8:
-												gameBoard[nrow][ncol].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
-												gameBoard[nrow][ncol].setEnabled(false);
-												break;
-											}
-											gameScore.increaseScore(time.getTime());
-											scoreZone.setText(gameScore.getStringScore());
-										}
+										EnableBlock(result,nrow,ncol);
 									}
 								}
 							}
@@ -275,18 +196,18 @@ public class Main extends Thread{
 			mainPanel.add(timeZone);
 			mainPanel.add(scoreZone);
 			
-			JButton btnClock = new JButton();
+			btnClock = new JButton();
 			btnClock.setIcon(new ImageIcon("./image/clock.jpg"));
 			btnClock.setBounds(90, 500, 30, 30);
 			mainPanel.add(btnClock);
 			
-			JButton btnScore = new JButton();
+			btnScore = new JButton();
 			btnScore.setIcon(new ImageIcon("./image/score.jpg"));
 			btnScore.setBounds(660, 500, 30, 30);
 			mainPanel.add(btnScore);
 			
 			/* login button */
-			JButton btnLogin = new JButton("Login");
+			btnLogin = new JButton("Login");
 			btnLogin.setBackground(Color.WHITE);
 			btnLogin.setIcon(new ImageIcon("./image/login.jpg"));
 			btnLogin.setPressedIcon(new ImageIcon("./image/login_blue.JPG"));
@@ -332,6 +253,66 @@ public class Main extends Thread{
 		
 		Thread t1 = new Thread(task);
 		t1.start();
+	}
+	
+
+	public static void EnableBlock(int result_, int row,int col) {
+		if(result_ ==-1) {
+			gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
+			gameBoard[row][col].setEnabled(false);
+			JOptionPane.showMessageDialog(null, "Boom!");
+			int[] arr = game.getMineArray();
+			for(int i=0;i<arr.length;i++) {
+				int r = arr[i]/30;
+				int c = arr[i]%30;
+				
+				gameBoard[r][c].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
+				gameBoard[r][c].setEnabled(false);
+			}
+			time.interrupt();
+			//System.exit(0);
+		} else {
+			switch(result_) {
+			case 0:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/zero.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 1:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/one.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 2:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/two.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 3:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/three.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 4:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/four.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 5:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/five.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 6:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/six.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 7:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/seven.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			case 8:
+				gameBoard[row][col].setDisabledIcon(new ImageIcon("./image/eight.jpg"));
+				gameBoard[row][col].setEnabled(false);
+				break;
+			}
+			gameScore.increaseScore(time.getTime());
+			scoreZone.setText(gameScore.getStringScore());
+		}
 	}
 	
 	public static JMenuBar menuBar() {

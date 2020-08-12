@@ -6,6 +6,7 @@ public class GameData {
 	private final int ROW = 16;
 	private final int COLUMN = 30;
 	private Box[][] gameBoard = new Box[ROW][COLUMN];
+	private int[] mine;
 	
 	public GameData() {
 		
@@ -20,7 +21,8 @@ public class GameData {
 	public void setGameData(int start_x,int start_y) {
 		/* 지뢰 심기 */
 		int firstTouch = 30*start_x + start_y;
-		int[] arr = new Random(System.currentTimeMillis()).ints(0,480).limit(99).toArray();
+		int[] arr = new Random(System.currentTimeMillis()).ints(0,480).filter(n -> n!=firstTouch).limit(99).toArray();
+		mine = arr;
 		
 		for(int i=0;i<NUM_OF_MINE;i++) {
 			int row = arr[i]/30;
@@ -67,6 +69,10 @@ public class GameData {
 	
 	public boolean isMine(int row,int col) {
 		return gameBoard[row][col].IsMine();
+	}
+	
+	public int[] getMineArray() {
+		return mine;
 	}
 	
 	class Box {
