@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -42,12 +41,15 @@ class ImagePanel extends JPanel{
 
 public class Main extends Thread{
 	static int isFirst=0;
+	static final int NUM_OF_RED_FLAG = 99;
+	static int red_flag;
 	static JFrame frame = new JFrame("Find Mine");
 	static GameData game;
 	static JTextField timeZone;
 	static GameTime time;
 	static Score gameScore;
 	static JTextField scoreZone;
+	static JTextField flagZone;
 	static ImagePanel loginPanel;
 	static ImagePanel mainPanel;
 	static JLabel lblNewLabel;
@@ -58,10 +60,13 @@ public class Main extends Thread{
 	static JButton btnLogin;
 	static JButton btnClock;
 	static JButton btnScore;
+	static JButton btnFlag;
+	static JLabel mainLabel; 
 	
 	public static void main(String[] args) {
 		Runnable task = () -> {
 			game = new GameData();
+			red_flag = NUM_OF_RED_FLAG;
 			timeZone = new JTextField(20);
 			time = new GameTime(timeZone);
 			gameScore = new Score();
@@ -70,9 +75,14 @@ public class Main extends Thread{
 			scoreZone.setBounds(700, 500, 100, 30);
 			scoreZone.setText(gameScore.getStringScore());
 			scoreZone.setEnabled(false);
+			flagZone = new JTextField(20);
+			flagZone.setBounds(415,500,100,30);
+			flagZone.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			flagZone.setText("     "+red_flag);
+			flagZone.setEnabled(false);
 			//String[][] member = Member.getMember();
 			
-			frame.setLocationRelativeTo(null);
+			//frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
 			frame.setJMenuBar(menuBar());
 			
@@ -111,6 +121,11 @@ public class Main extends Thread{
 			gameBoard = new JButton[16][30];
 			
 			/* mainPanel components */
+			mainLabel = new JLabel("FIND MINE");
+			mainLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			mainLabel.setBounds(380, 30, 200, 30);
+			mainPanel.add(mainLabel);
+			
 			for(int i=0;i<16;i++) {
 				for(int j=0;j<30;j++) {
 					gameBoard[i][j] = new JButton();
@@ -126,6 +141,7 @@ public class Main extends Thread{
 						public void actionPerformed(ActionEvent e) {
 							if(isFirst ==0) {
 								game.setGameData(row, col);
+								time.start();
 								isFirst =1;
 							}
 							
@@ -168,14 +184,21 @@ public class Main extends Thread{
 						public void mousePressed(MouseEvent e) {
 							if(e.getButton() == MouseEvent.BUTTON3) {
 								ImageIcon icon = (ImageIcon)gameBoard[row][col].getIcon();
-								if(icon.getDescription().equals("default_button"))
+								if(icon.getDescription().equals("default_button") && red_flag >0) {
 									gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
-								else if(icon.getDescription().equals("red_flag"))
+									red_flag--;
+									flagZone.setText("     "+red_flag);
+								} else if(icon.getDescription().equals("red_flag")) {
 									gameBoard[row][col].setIcon(new ImageIcon("./image/yellow_flag.jpg","yellow_flag"));
-								else if(icon.getDescription().equals("yellow_flag"))
+									red_flag++;
+									flagZone.setText("     "+red_flag);
+								} else if(icon.getDescription().equals("yellow_flag")) {
 									gameBoard[row][col].setIcon(new ImageIcon("./image/default_button.jpg","default_button"));
-								else 
+								} else {
 									gameBoard[row][col].setIcon(new ImageIcon("./image/red_flag.jpg","red_flag"));
+									red_flag--;
+									flagZone.setText("     "+red_flag);
+								}
 							}
 						}
 
@@ -195,6 +218,7 @@ public class Main extends Thread{
 			
 			mainPanel.add(timeZone);
 			mainPanel.add(scoreZone);
+			mainPanel.add(flagZone);
 			
 			btnClock = new JButton();
 			btnClock.setIcon(new ImageIcon("./image/clock.jpg"));
@@ -205,6 +229,11 @@ public class Main extends Thread{
 			btnScore.setIcon(new ImageIcon("./image/score.jpg"));
 			btnScore.setBounds(660, 500, 30, 30);
 			mainPanel.add(btnScore);
+			
+			btnFlag = new JButton();
+			btnFlag.setIcon(new ImageIcon("./image/red_flag_whiteback.jpg"));
+			btnFlag.setBounds(375,500,30,30);
+			mainPanel.add(btnFlag);
 			
 			/* login button */
 			btnLogin = new JButton("Login");
@@ -234,11 +263,11 @@ public class Main extends Thread{
 						JOptionPane.showMessageDialog(null, "Unregistered ID");
 					}
 					*/
+					
 					loginPanel.setVisible(false);
 					frame.setSize(900,700);
 					frame.setLocationRelativeTo(null);
 					mainPanel.setVisible(true);
-					time.start();
 				}
 				
 			});
@@ -262,6 +291,7 @@ public class Main extends Thread{
 			gameBoard[row][col].setEnabled(false);
 			JOptionPane.showMessageDialog(null, "Boom!");
 			int[] arr = game.getMineArray();
+			
 			for(int i=0;i<arr.length;i++) {
 				int r = arr[i]/30;
 				int c = arr[i]%30;
@@ -269,7 +299,7 @@ public class Main extends Thread{
 				gameBoard[r][c].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 				gameBoard[r][c].setEnabled(false);
 			}
-			time.interrupt();
+			//time.interrupt();
 			//System.exit(0);
 		} else {
 			switch(result_) {
@@ -361,15 +391,33 @@ public class Main extends Thread{
 		JMenuItem thisGame = new JMenuItem("This Game");
 		
 		thisGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "This game is made by Kim\nCopyright © 2020 김건영. All rights reserved.",
+						"Find Mine",JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		
+		JMenuItem howPlay = new JMenuItem("How to Play");
+		howPlay.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "This game is made by Kim\nCopyright © 2020 김건영. All rights reserved.");
+				JOptionPane.showMessageDialog(null,"The game Screen consists of minefield with several square buttons. \n"
+						+ "Each button can be pressed open\n"
+						+ "If you press a button with a hidden mine and open it, the game is over. \n"
+						+ "If it's a button without a mine, there are two cases.\n"
+						+ "	1. The number of landmines hidden in other buttons around the perimeter that touch an open button may be written \n"
+						+ " 2. If there are no hidden mines around it, the button automatically opens with it. \n" 
+						+ "If you open all the buttons that are not hidden, you win the game.\n\n" 
+						+ "Players can right-click a button that they think is hidden by a landmine and put up a flag.\n",
+						"How To Play",JOptionPane.INFORMATION_MESSAGE);
 			}
 			
 		});
 		
 		about.add(thisGame);
+		about.add(howPlay);
 		
 		return bar;
 	}

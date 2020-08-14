@@ -15,13 +15,12 @@ public class GameData {
 				gameBoard[i][j] = new Box();
 			}
 		}
-		
 	}
 	
 	public void setGameData(int start_x,int start_y) {
 		/* 지뢰 심기 */
 		int firstTouch = 30*start_x + start_y;
-		int[] arr = new Random(System.currentTimeMillis()).ints(0,480).filter(n -> n!=firstTouch).limit(99).toArray();
+		int[] arr = new Random(System.currentTimeMillis()).ints(0,480).distinct().filter(n -> n!=firstTouch).limit(99).toArray();
 		mine = arr;
 		
 		for(int i=0;i<NUM_OF_MINE;i++) {

@@ -10,7 +10,7 @@ public class GameTime extends Thread {
 		this.txt = txt;
 		txt.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		txt.setBounds(130, 500, 100, 30);
-		txt.setText(getTime()+"");
+		txt.setText(getTimeString()+"");
 		txt.setEnabled(false);
 	}
 	
