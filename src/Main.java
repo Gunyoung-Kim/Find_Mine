@@ -40,6 +40,8 @@ class ImagePanel extends JPanel{
 }
 
 public class Main extends Thread{
+	private static final int NUM_OF_ROW = 16;
+	private static final int NUM_OF_COLUMN = 30;
 	static int isFirst=0;
 	static final int NUM_OF_RED_FLAG = 99;
 	static int red_flag;
@@ -62,6 +64,7 @@ public class Main extends Thread{
 	static JButton btnScore;
 	static JButton btnFlag;
 	static JLabel mainLabel; 
+	//static User user;
 	
 	public static void main(String[] args) {
 		Runnable task = () -> {
@@ -118,7 +121,7 @@ public class Main extends Thread{
 			passwordField.setBounds(264, 281, 181, 26);
 			loginPanel.add(passwordField);
 			
-			gameBoard = new JButton[16][30];
+			gameBoard = new JButton[NUM_OF_ROW][NUM_OF_COLUMN];
 			
 			/* mainPanel components */
 			mainLabel = new JLabel("FIND MINE");
@@ -126,8 +129,8 @@ public class Main extends Thread{
 			mainLabel.setBounds(380, 30, 200, 30);
 			mainPanel.add(mainLabel);
 			
-			for(int i=0;i<16;i++) {
-				for(int j=0;j<30;j++) {
+			for(int i=0;i<NUM_OF_ROW;i++) {
+				for(int j=0;j<NUM_OF_COLUMN;j++) {
 					gameBoard[i][j] = new JButton();
 					gameBoard[i][j].setBounds(100+25*(j-1), 100+25*(i-1) , 25, 25);
 					gameBoard[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -252,6 +255,7 @@ public class Main extends Thread{
 					/*
 					if((index =Member.isThereMember(enterId)) != -1) {
 						if(Member.isPwCorrect(enterPw,index)) {
+							user = User.getUser(enterId, enterPw, "name", "010", "0");
 							loginPanel.setVisible(false);
 							frame.setSize(900,700);
 							frame.setLocationRelativeTo(null);
@@ -291,6 +295,14 @@ public class Main extends Thread{
 			gameBoard[row][col].setEnabled(false);
 			JOptionPane.showMessageDialog(null, "Boom!");
 			int[] arr = game.getMineArray();
+			
+			/*
+			if(user.renewScore(gameScore.getScore())) {
+				JOptionPane.showMessageDialog(null, "New Record!");
+			}
+			else {
+			}
+			*/
 			
 			for(int i=0;i<arr.length;i++) {
 				int r = arr[i]/30;
