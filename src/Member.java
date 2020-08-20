@@ -83,9 +83,9 @@ public class Member {
 	public static Connection getConnection() {
 		try {
 			String driver = "com.mysql.cj.jdbc.Driver";
-			String url = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12358719";
-			String user = "sql12358719";
-			String pass = "2j8DWBYa6y";
+			String url = "jdbc:mysql://localhost:3306/findmine?characterEncoding=UTF-8&serverTimezone=UTC";
+			String user = "root";
+			String pass = "tel16027!";
 			Class.forName(driver);
 			Connection con = DriverManager.getConnection(url,user,pass);
 			System.out.println("The connection is successful");

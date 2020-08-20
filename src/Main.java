@@ -83,7 +83,6 @@ public class Main extends Thread{
 			flagZone.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			flagZone.setText("     "+red_flag);
 			flagZone.setEnabled(false);
-			//String[][] member = Member.getMember();
 			
 			//frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
@@ -252,10 +251,10 @@ public class Main extends Thread{
 					String enterPw = new String(pw,0,pw.length);
 					int index;
 					
-					/*
+					
 					if((index =Member.isThereMember(enterId)) != -1) {
 						if(Member.isPwCorrect(enterPw,index)) {
-							user = User.getUser(enterId, enterPw, "name", "010", "0");
+							//user = User.getUser(enterId, enterPw, "name", "010", "0");
 							loginPanel.setVisible(false);
 							frame.setSize(900,700);
 							frame.setLocationRelativeTo(null);
@@ -266,12 +265,13 @@ public class Main extends Thread{
 					} else {
 						JOptionPane.showMessageDialog(null, "Unregistered ID");
 					}
-					*/
 					
+					/*
 					loginPanel.setVisible(false);
 					frame.setSize(900,700);
 					frame.setLocationRelativeTo(null);
 					mainPanel.setVisible(true);
+					*/
 				}
 				
 			});
