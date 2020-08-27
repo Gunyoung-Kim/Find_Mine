@@ -34,3 +34,10 @@
 
 - ver 1.0.8
   - mySQL에 연결 성공, 관리자용 계정 생성
+
+- ver 1.0.9
+  - Exception in thread "Thread-1" java.lang.Error: Interrupted attempt to acquire write lock 에러 해결
+  - main 파일에 user 변수 활성화
+  - 게임 끝났을때 최고 점수 갱신
+  - Member class의 static 변수 member 의 초기화와 이의 리턴을 하나의 함수에서 하던걸 두개로 나눔
+  - 메뉴바에 ranking 이랑 logout 추가
