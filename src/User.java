@@ -37,6 +37,7 @@ public class User {
 	public boolean renewScore(int score) {
 		if(score > Integer.parseInt(this.highestscore)) {
 			this.highestscore = new String(score+"");
+			Member.updateScore(this.id, this.highestscore);
 			return true;
 		} else {
 			return false;

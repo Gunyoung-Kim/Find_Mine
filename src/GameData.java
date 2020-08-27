@@ -1,5 +1,4 @@
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class GameData {
 	private final int NUM_OF_MINE = 99;

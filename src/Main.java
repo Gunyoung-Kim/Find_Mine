@@ -64,7 +64,7 @@ public class Main extends Thread{
 	static JButton btnScore;
 	static JButton btnFlag;
 	static JLabel mainLabel; 
-	//static User user;
+	static User user;
 	
 	public static void main(String[] args) {
 		Runnable task = () -> {
@@ -83,6 +83,7 @@ public class Main extends Thread{
 			flagZone.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			flagZone.setText("     "+red_flag);
 			flagZone.setEnabled(false);
+			Member.loadMember();
 			
 			//frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
@@ -254,7 +255,7 @@ public class Main extends Thread{
 					
 					if((index =Member.isThereMember(enterId)) != -1) {
 						if(Member.isPwCorrect(enterPw,index)) {
-							//user = User.getUser(enterId, enterPw, "name", "010", "0");
+							user = Member.loginUser(enterId);
 							loginPanel.setVisible(false);
 							frame.setSize(900,700);
 							frame.setLocationRelativeTo(null);
@@ -265,7 +266,6 @@ public class Main extends Thread{
 					} else {
 						JOptionPane.showMessageDialog(null, "Unregistered ID");
 					}
-					
 					/*
 					loginPanel.setVisible(false);
 					frame.setSize(900,700);
@@ -296,13 +296,9 @@ public class Main extends Thread{
 			JOptionPane.showMessageDialog(null, "Boom!");
 			int[] arr = game.getMineArray();
 			
-			/*
 			if(user.renewScore(gameScore.getScore())) {
 				JOptionPane.showMessageDialog(null, "New Record!");
 			}
-			else {
-			}
-			*/
 			
 			for(int i=0;i<arr.length;i++) {
 				int r = arr[i]/30;
@@ -311,7 +307,7 @@ public class Main extends Thread{
 				gameBoard[r][c].setDisabledIcon(new ImageIcon("./image/mine.jpg","mine"));
 				gameBoard[r][c].setEnabled(false);
 			}
-			//time.interrupt();
+			time.interrupt();
 			//System.exit(0);
 		} else {
 			switch(result_) {
@@ -372,6 +368,16 @@ public class Main extends Thread{
 		
 		JMenuItem option = new JMenuItem("Option");
 		
+		JMenuItem logout = new JMenuItem("Log Out");
+		
+		logout.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+			
+		});
+		
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
 			@Override
@@ -384,9 +390,12 @@ public class Main extends Thread{
 		game.addSeparator();
 		game.add(option);
 		game.addSeparator();
+		game.add(logout);
+		game.addSeparator();
 		game.add(exit);
 		
 		JMenuItem joinUs = new JMenuItem("Join Us");
+		JMenuItem ranking = new JMenuItem("Ranking");
 		
 		joinUs.addActionListener(new ActionListener() {
 
@@ -398,6 +407,8 @@ public class Main extends Thread{
 			
 		});
 		
+		member.add(ranking);
+		member.addSeparator();
 		member.add(joinUs);
 		
 		JMenuItem thisGame = new JMenuItem("This Game");
@@ -429,6 +440,7 @@ public class Main extends Thread{
 		});
 		
 		about.add(thisGame);
+		about.addSeparator();
 		about.add(howPlay);
 		
 		return bar;

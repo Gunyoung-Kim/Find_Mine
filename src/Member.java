@@ -17,13 +17,54 @@ public class Member {
 	
 	public static int isThereMember(String id) {
 		for(int i=0;i<member.length;i++) {
-			if(member[i][0].equals(id))
+			if(member[i][0].equals(id)) {
 				return i;
+			}
 		}
 		return -1;
 	}
 	
-	public static String[][] getMember() {
+	public static User loginUser(String id) {
+		try {
+			Connection con = getConnection();
+			String id_ = "";
+			String password = "";
+			String name = "";
+			String phone = "";
+			String score = "";
+			PreparedStatement loginUser = con.prepareStatement("Select id, password, name , phone, highest_score "
+					+ "FROM member "
+					+ "WHERE id = "+"\""+id+"\"");
+			ResultSet results = loginUser.executeQuery();
+			if(results.next()) {
+				id_ = results.getString("id");
+				password = results.getString("password");
+				name = results.getString("name");
+				phone = results.getString("phone");
+				score = results.getString("highest_score");
+			}
+			User user = User.getUser(id_,password,name,phone,score);
+			return user;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void updateScore(String id, String score) {
+		try {
+			Connection con = getConnection();
+			PreparedStatement updateScore = con.prepareStatement("Update member "
+					+ "SET highest_score = " +"\""+score+"\""
+					+ "WHERE id = "+"\""+id+"\"");
+			updateScore.executeUpdate();
+			System.out.println("Renew Score");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loadMember() {
 		try {
 			Connection con = getConnection();
 			PreparedStatement getMember = con.prepareStatement("Select id, password FROM member");
@@ -38,9 +79,15 @@ public class Member {
 			
 			String[][] arr = new String[list.size()][2];
 			member = list.toArray(arr);
-			return member;
 		} catch(Exception e) {
 			System.out.println(e);
+		}
+	}
+	
+	public static String[][] getMember() {
+		if(member != null) {
+			return member;
+		} else {
 			return null;
 		}
 	}

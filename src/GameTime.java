@@ -17,10 +17,10 @@ public class GameTime extends Thread {
 	public void run() {
 		long startTime = System.currentTimeMillis();
 		
-		while(true) {
+		while(!isInterrupted()) {
 			time = (System.currentTimeMillis() - startTime)/1000;
 			this.txt.setText(getTimeString());
-		}
+		} 
 	}
 	
 	public long getTime() {
