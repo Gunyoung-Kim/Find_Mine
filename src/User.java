@@ -34,6 +34,10 @@ public class User {
 		return this.phonenum;
 	}
 	
+	public String getScore() {
+		return this.highestscore;
+	}
+	
 	public boolean renewScore(int score) {
 		if(score > Integer.parseInt(this.highestscore)) {
 			this.highestscore = new String(score+"");

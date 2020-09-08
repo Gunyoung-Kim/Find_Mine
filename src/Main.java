@@ -42,6 +42,7 @@ class ImagePanel extends JPanel{
 public class Main extends Thread{
 	private static final int NUM_OF_ROW = 16;
 	private static final int NUM_OF_COLUMN = 30;
+	private static final String CURRENT_VERSION = "ver 1.0.9";
 	static int isFirst=0;
 	static final int NUM_OF_RED_FLAG = 99;
 	static int red_flag;
@@ -54,6 +55,7 @@ public class Main extends Thread{
 	static JTextField flagZone;
 	static ImagePanel loginPanel;
 	static ImagePanel mainPanel;
+	static JLabel lblVersion;
 	static JLabel lblNewLabel;
 	static JLabel lblPassword;
 	static JTextField textFieldID;
@@ -64,6 +66,7 @@ public class Main extends Thread{
 	static JButton btnScore;
 	static JButton btnFlag;
 	static JLabel mainLabel; 
+	static JLabel lblcUser;
 	static User user;
 	
 	public static void main(String[] args) {
@@ -91,12 +94,8 @@ public class Main extends Thread{
 			
 			/* frame components */
 			loginPanel = new ImagePanel(new ImageIcon("./image/startWindow.JPG").getImage());
-			frame.add(loginPanel);
-			frame.setSize(640,525);
-			frame.setResizable(false);
 			
 			mainPanel = new ImagePanel(new ImageIcon("./image/white_back.jpg").getImage());
-			frame.add(mainPanel);
 			mainPanel.setVisible(false);
 			
 			/* loginPanel components */
@@ -107,8 +106,8 @@ public class Main extends Thread{
 			loginPanel.add(lblNewLabel); 
 			
 			lblPassword = new JLabel("Password");
-			lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
 			lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+			lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
 			lblPassword.setBounds(154, 283, 90, 16);
 			loginPanel.add(lblPassword);
 			
@@ -121,9 +120,13 @@ public class Main extends Thread{
 			passwordField.setBounds(264, 281, 181, 26);
 			loginPanel.add(passwordField);
 			
-			gameBoard = new JButton[NUM_OF_ROW][NUM_OF_COLUMN];
+			lblVersion = new JLabel(CURRENT_VERSION);
+			lblVersion.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+			lblVersion.setBounds(550, 450, 90, 16);
+			loginPanel.add(lblVersion);			
 			
 			/* mainPanel components */
+			gameBoard = new JButton[NUM_OF_ROW][NUM_OF_COLUMN];
 			mainLabel = new JLabel("FIND MINE");
 			mainLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 			mainLabel.setBounds(380, 30, 200, 30);
@@ -238,6 +241,7 @@ public class Main extends Thread{
 			btnFlag.setBounds(375,500,30,30);
 			mainPanel.add(btnFlag);
 			
+			
 			/* login button */
 			btnLogin = new JButton("Login");
 			btnLogin.setBackground(Color.WHITE);
@@ -260,6 +264,10 @@ public class Main extends Thread{
 							frame.setSize(900,700);
 							frame.setLocationRelativeTo(null);
 							mainPanel.setVisible(true);
+							lblcUser = new JLabel(user.getId() +" : " +user.getScore());
+							lblcUser.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+							lblcUser.setBounds(660, 580, 300, 100);
+							mainPanel.add(lblcUser);
 						} else {
 							JOptionPane.showMessageDialog(null, "Incorrect PW");
 						}
@@ -278,10 +286,11 @@ public class Main extends Thread{
 			
 			loginPanel.add(btnLogin);
 			
+			frame.add(loginPanel);
+			frame.setSize(640,525);
+			frame.setResizable(false);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			
-
+			frame.add(mainPanel);
 		};
 		
 		Thread t1 = new Thread(task);
@@ -403,6 +412,20 @@ public class Main extends Thread{
 			public void actionPerformed(ActionEvent e) {
 				SignUs signUs = new SignUs(frame);
 				signUs.setVisible(true);
+			}
+			
+		});
+		
+		ranking.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[][] rank = Member.getRanking();
+				StringBuilder st = new StringBuilder("		   " +"RANKING\n\n");
+				
+				for(int i=0;i<rank.length;i++) {
+					st.append((i+1)+". "+rank[i][0] +"	:	" + rank[i][1]+"\n\n");
+				}
+				JOptionPane.showMessageDialog(null, st.toString(),"RANKING",JOptionPane.INFORMATION_MESSAGE);
 			}
 			
 		});

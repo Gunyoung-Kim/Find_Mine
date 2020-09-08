@@ -64,10 +64,35 @@ public class Member {
 		}
 	}
 	
+	public static String[][] getRanking() {
+		try {
+			String[][] rank;
+			Connection con = getConnection();
+			PreparedStatement loadRanking = con.prepareStatement("SELECT id, highest_score FROM member "
+					+ "ORDER BY CAST(highest_score AS signed) DESC");
+			ResultSet results = loadRanking.executeQuery();
+			ArrayList<String[]> list = new ArrayList<>();
+			while(results.next()) {
+				list.add(new String[] {
+						results.getString("id"),
+						results.getString("highest_score")
+				});
+			}
+			
+			String[][] arr = new String[list.size()][2];
+			rank = list.toArray(arr);
+			return rank;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
 	public static void loadMember() {
 		try {
 			Connection con = getConnection();
-			PreparedStatement getMember = con.prepareStatement("Select id, password FROM member");
+			PreparedStatement getMember = con.prepareStatement("SELECT id, password FROM member");
 			ResultSet results = getMember.executeQuery();
 			ArrayList<String[]> list = new ArrayList<>();
 			while(results.next()) {
